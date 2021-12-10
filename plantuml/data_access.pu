@@ -1,0 +1,81 @@
+@startuml DataNode
+skinparam ranksep 1
+skinparam nodesep 20
+skinparam monochrome true
+
+package "Data Access" {
+    component "Data Node" as dataNode {
+        component dataNodeProxy [
+            Data Node Proxy
+        ]
+        interface "HTTP (file serving)" as dataNodeProxyIface
+        dataNodeProxyIface -down- dataNodeProxy
+        component "THREDDS Data Server" as thredds 
+
+        database "File System" as fileSystem
+        interface "POSIX" as posix
+        fileSystem -up- posix
+
+        interface "OPeNDAP" as openDAP 
+
+        thredds -right- openDAP
+        dataNodeProxy .left.> openDAP
+        dataNodeProxy ..> posix
+        thredds ..> posix
+
+        dataNodeProxy -[hidden]- thredds
+
+        component "Nginx Access Control Filter\n" as nginxAccessCtrlFilter {
+            component "Policy Enforcement Point" as pep
+            component "OAuth Resource Filter" as oauthResourceFilter
+            component "OpenID Connect Token Validator" as oidcTokValidator
+
+            pep -[hidden]- oauthResourceFilter
+            oauthResourceFilter -[hidden]- oidcTokValidator
+        }
+        interface "Authorisation Callout" as authzCallout
+        nginxAccessCtrlFilter -up- authzCallout
+
+        dataNodeProxy ..> authzCallout
+    }
+
+    component "Web Search UI\n" as webSearchUI {
+        component "STAC Search Client" as stacSearchClnt
+        component "OpenID Connect Relying Party" as oidcRP
+        stacSearchClnt -[hidden]- oidcRP
+    }
+    oidcRP .down.> dataNodeProxyIface
+
+    component "3rd Party Commercial Identity Provider\n" {
+        component "3rd Party Commercial OpenID Connect Provider" as commOidcProvider
+        interface "OIDC Provider" as commOidcProviderIface
+        commOidcProvider -- commOidcProviderIface
+    }
+
+    component "ESGF Site Identity Provider\n" {
+        component "ESGF Site OpenID Connect Provider" as esgfOidcProvider
+        interface "OIDC Provider" as esgfOidcProviderIface
+        esgfOidcProvider -- esgfOidcProviderIface
+    }
+
+    component "Central Identity Provider Proxy\n" as centralIdPproxy {
+        component "Central Proxy OpenID Connect Provider" as centralOidcProvider
+        component "Central Proxy OpenID Connect Relying Party" as centralOidcRP
+        centralOidcRP -[hidden]- centralOidcProvider
+
+        interface "OIDC Provider" as centralOidcProviderIface
+        centralOidcProvider -down- centralOidcProviderIface
+    }
+    oidcRP .up.> centralOidcProviderIface
+    oauthResourceFilter ..> centralOidcProviderIface : "OAuth token inspection"
+
+    centralOidcRP .up.> esgfOidcProviderIface
+    centralOidcRP .up.> commOidcProviderIface
+
+    ' Vertical arrangement of main components - use hidden connections to 
+    ' vertically stack
+    centralIdPproxy -[hidden]- webSearchUI
+    webSearchUI -[hidden]- dataNode
+}
+
+@enduml
