@@ -1,9 +1,27 @@
 @startuml DataNode
-skinparam ranksep 1
-skinparam nodesep 20
-skinparam monochrome true
 
-package "Data Access" {
+' Set a style similar to Enterprise Architect
+skinparam ranksep 20
+skinparam nodesep 20
+skinparam component {
+  BorderColor black
+  BackgroundColor wheat|Tan
+}
+skinparam interface {
+    BorderColor black
+}
+skinparam database {
+    BackgroundColor wheat|Tan
+}
+skinparam interface {
+    BorderColor black
+    BackgroundColor wheat
+}
+skinparam ArrowColor black
+' This setting alone completely compacts and tidies the diagram!!
+skinparam linetype ortho
+
+package "Data Access" as dataAccess {
     component "Data Node" as dataNode {
         component dataNodeProxy [
             Data Node Proxy
@@ -18,12 +36,16 @@ package "Data Access" {
 
         interface "OPeNDAP" as openDAP 
 
-        thredds -right- openDAP
-        dataNodeProxy .left.> openDAP
+        thredds -up- openDAP
+        dataNodeProxy .down.> openDAP
         dataNodeProxy ..> posix
         thredds ..> posix
 
+        component "Publisher" as publisher
+        publisher .down.> posix
+        
         dataNodeProxy -[hidden]- thredds
+        publisher -[hidden]- nginxAccessCtrlFilter
 
         component "Nginx Access Control Filter\n" as nginxAccessCtrlFilter {
             component "Policy Enforcement Point" as pep
@@ -37,6 +59,12 @@ package "Data Access" {
         nginxAccessCtrlFilter -up- authzCallout
 
         dataNodeProxy ..> authzCallout
+
+        component "Authorisation Service" as authzService
+        interface "Open Policy Agent web API" as opaAPI
+        authzService -up- opaAPI
+
+        pep .down.> opaAPI
     }
 
     component "Web Search UI\n" as webSearchUI {
@@ -45,6 +73,16 @@ package "Data Access" {
         stacSearchClnt -[hidden]- oidcRP
     }
     oidcRP .down.> dataNodeProxyIface
+
+    component "Central Super Index Node" as centralSuperIndexNode
+    interface "STAC API" as stacAPI
+    centralSuperIndexNode -down- stacAPI
+    stacSearchClnt .up.> stacAPI
+    publisher .up.> stacAPI
+
+    centralSuperIndexNode -[hidden]- webSearchUI
+    webSearchUI -[hidden]- dataNode
+    oidcRP -[hidden]- dataNode
 
     component "3rd Party Commercial Identity Provider\n" {
         component "3rd Party Commercial OpenID Connect Provider" as commOidcProvider
@@ -61,11 +99,21 @@ package "Data Access" {
     component "Central Identity Provider Proxy\n" as centralIdPproxy {
         component "Central Proxy OpenID Connect Provider" as centralOidcProvider
         component "Central Proxy OpenID Connect Relying Party" as centralOidcRP
-        centralOidcRP -[hidden]- centralOidcProvider
+        component "User Attribute Registration Web App" as userAttrRegWebApp
+        centralOidcRP -[hidden]- userAttrRegWebApp
+        userAttrRegWebApp -[hidden]- centralOidcProvider
 
         interface "OIDC Provider" as centralOidcProviderIface
         centralOidcProvider -down- centralOidcProviderIface
-    }
+
+        interface "\nOIDC\nProvider\ninternal\ninterface" as centralOidcProviderIntIface
+        centralOidcProvider -right- centralOidcProviderIntIface
+
+        userAttrRegWebApp .right.> centralOidcProviderIntIface
+
+        interface "User Attribute Registration Web UI\t\t\t\t\t\t\t" as userAttrRegWebUI
+        userAttrRegWebApp -left- userAttrRegWebUI
+   }
     oidcRP .up.> centralOidcProviderIface
     oauthResourceFilter ..> centralOidcProviderIface : "OAuth token inspection"
 
