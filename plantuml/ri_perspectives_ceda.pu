@@ -28,7 +28,8 @@ skinparam ArrowColor black
 skinparam linetype ortho
 
 component "ESGF External Client" as esgfExtClnt
-component "Other Communities Client [1..n]" as otherExtClnt
+' Show another client
+' component "Other Communities Client [1..n]" as otherExtClnt
 
 card "ESGF Centralised Services" as esgfCentralisedSrvcs {
     component "IdP" as esgfCentralIdP
@@ -81,7 +82,7 @@ card "JASMIN" as jasmin {
 
     ' CEDA Archive interfaces
     interface "Search" as searchIface
-    interface "Data Access" as dataAccessIface
+    interface "\tData Access / WPS" as dataAccessIface
     interface "OIDC" as cedaIdpIface
     cedaIdpIface -- cedaIdP
 
@@ -95,6 +96,7 @@ card "JASMIN" as jasmin {
     interface "\tPOSIX" as posixIface
     interface "\tS3" as s3Iface
 
+    note right of s3Iface : Dual POSIX + S3 Access to\nsame data an aspiration
     posixIface -down- storage
     s3Iface -down- storage
 
@@ -151,10 +153,11 @@ card "JASMIN" as jasmin {
 
     lotus .up.> posixIface
 
-    otherExtClnt .down.> searchIface
-    otherExtClnt .down.> dataAccessIface
-    otherExtClnt .down.> jupyterNbSrvcIface
-    otherExtClnt .down.> pangeoIface
+    ' Show other client
+    ' otherExtClnt .down.> searchIface
+    ' otherExtClnt .down.> dataAccessIface
+    ' otherExtClnt .down.> jupyterNbSrvcIface
+    ' otherExtClnt .down.> pangeoIface
 
 }
 @enduml
