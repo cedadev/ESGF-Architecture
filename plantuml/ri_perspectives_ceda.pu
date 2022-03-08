@@ -1,0 +1,160 @@
+@startuml RiPerspectiveCEDA
+
+' Set a style similar to Enterprise Architect
+skinparam ranksep 50
+skinparam nodesep 50
+skinparam card {
+  BorderColor black
+  BackgroundColor wheat|Tan
+}
+skinparam component {
+  BorderColor black
+  BackgroundColor wheat|Tan
+}
+
+skinparam database {
+    BackgroundColor wheat|Tan
+}
+skinparam interface {
+    BorderColor black
+    BackgroundColor wheat
+}
+skinparam note {
+    BorderColor black
+    BackgroundColor white
+}
+skinparam ArrowColor black
+' This setting alone completely compacts and tidies the diagram!!
+skinparam linetype ortho
+
+component "ESGF External Client" as esgfExtClnt
+component "Other Communities Client [1..n]" as otherExtClnt
+
+card "ESGF Centralised Services" as esgfCentralisedSrvcs {
+    component "IdP" as esgfCentralIdP
+    component "Search Service" as esgfCentralSearchSrvc
+}
+
+interface "OIDC" as esgfCentralIdpIface
+esgfCentralIdP -up- esgfCentralIdpIface
+
+' Placement setting to ensure interface is displayed directly above
+esgfCentralIdpIface -[hidden]- esgfCentralIdP
+
+interface "STAC" as esgfCentralSearchSrvcIface
+esgfCentralSearchSrvc -down- esgfCentralSearchSrvcIface
+
+' Placement setting to ensure interface is displayed directly below
+esgfCentralSearchSrvc -[hidden]- esgfCentralSearchSrvcIface
+
+
+' Placement - ESGF services above JASMIN
+esgfExtClnt -[hidden]- esgfCentralisedSrvcs
+esgfCentralisedSrvcs -[hidden]- jasmin
+esgfCentralSearchSrvcIface -[hidden]- jasmin
+
+card "JASMIN" as jasmin {   
+    database storage [
+        Tiered Storage
+        ----
+
+          Object Store
+           POSIX Disk
+              Tape
+    ] 
+    component "Near-Line Data Store" as nlds 
+    interface "     Data movement API" as nldsIface
+    nldsIface -- nlds
+
+    nldsIface -[hidden]- nlds
+
+    component "Jupyter Notebook Service" as jupyterNbSrvc
+
+    storage -[hidden]- nlds
+    nlds ..> storage: "manages"
+
+    card "CEDA Archive" as cedaArchive {
+        component "Search Services" as mdCatalog
+        component "Data Node" as dataAccessServices
+        component "IdP" as cedaIdP
+    }
+
+    ' CEDA Archive interfaces
+    interface "Search" as searchIface
+    interface "Data Access" as dataAccessIface
+    interface "OIDC" as cedaIdpIface
+    cedaIdpIface -- cedaIdP
+
+    mdCatalog .up.> esgfCentralSearchSrvcIface
+    esgfCentralIdP .down.> cedaIdpIface
+
+    ' Align placement
+    esgfCentralIdP -[hidden]- cedaIdpIface
+
+    ' Storage interfaces
+    interface "\tPOSIX" as posixIface
+    interface "\tS3" as s3Iface
+
+    posixIface -down- storage
+    s3Iface -down- storage
+
+    esgfExtClnt -[hidden]- jasmin
+    esgfExtClnt .down.> s3Iface
+    esgfExtClnt .right.> esgfCentralSearchSrvcIface
+    esgfExtClnt .right.> esgfCentralIdpIface
+    
+    ' Services using POSIX storage interface
+    dataAccessServices .down.> posixIface
+    jupyterNbSrvc .right.> posixIface
+
+
+    searchIface -down- mdCatalog
+
+    ' Alignment
+    searchIface -[hidden]- mdCatalog
+
+    dataAccessIface -down- dataAccessServices
+
+    ' Alignment
+    dataAccessIface -[hidden]- dataAccessServices
+
+    ' Jupyter
+    interface "Notebook interface" as jupyterNbSrvcIface
+    jupyterNbSrvcIface -down- jupyterNbSrvc
+
+    ' Correctly align
+    jupyterNbSrvcIface -[hidden]- jupyterNbSrvc
+
+    jupyterNbSrvc .down.> s3Iface
+
+    card "Cloud" as cloud {
+            component "Pangeo [1..n]" as pangeo 
+            note left of pangeo : Self-managed /\nper project
+    }
+    component "Cluster-as-a-Service" as caaS 
+    cloud -[hidden]- caaS
+    caaS .up.> pangeo: "\tdeploys"
+
+    ' Pangeo
+    interface "Notebooks and Dask" as pangeoIface
+    pangeoIface -down- pangeo
+
+    ' Positioning
+    pangeoIface -[hidden]- pangeo
+
+    pangeo .down.> s3Iface
+
+    component "Lotus batch compute" as lotus 
+
+    ' Placement - get Lotus near to storage element
+    storage -[hidden]- lotus
+
+    lotus .up.> posixIface
+
+    otherExtClnt .down.> searchIface
+    otherExtClnt .down.> dataAccessIface
+    otherExtClnt .down.> jupyterNbSrvcIface
+    otherExtClnt .down.> pangeoIface
+
+}
+@enduml
