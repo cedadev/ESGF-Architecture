@@ -1,0 +1,157 @@
+@startuml enesArchitectureDesignPlans
+
+' Set a style similar to Enterprise Architect
+skinparam ranksep 50
+skinparam nodesep 50
+skinparam card {
+  BorderColor black
+  BackgroundColor wheat|Tan
+}
+skinparam component {
+  BorderColor black
+  BackgroundColor wheat|Tan
+}
+
+skinparam database {
+    BackgroundColor wheat|Tan
+}
+skinparam interface {
+    BorderColor black
+    BackgroundColor wheat
+}
+skinparam note {
+    BorderColor black
+    BackgroundColor white
+}
+skinparam ArrowColor black
+' This setting alone completely compacts and tidies the diagram!!
+skinparam linetype ortho
+
+component "User Agent" as userAgent
+
+card "ESGF Centralised Services" as esgfCentralisedSrvcs {
+    component "Central IdP" as esgfCentralIdP
+}
+
+interface "\tOIDC" as esgfCentralIdpIface
+esgfCentralIdpIface -down- esgfCentralIdP
+
+' Placement setting to ensure interface is displayed directly above
+esgfCentralIdpIface -[hidden]- esgfCentralIdP
+
+
+' Placement - ESGF services above esgfDataProvider
+esgfCentralisedSrvcs -[hidden]- esgfDataProvider
+
+card "Data Provider" as esgfDataProvider {   
+    database storage [
+        
+          Data Archive
+
+    ] 
+
+    card "ESGF Node" as cedaArchive {
+        component "Data Node" as dataAccessServices
+        component "Local IdP" as localIdP
+        component "Index Node" as esgfSearchSrvc
+
+        database searchIndex [
+            Search Index
+        ]
+
+        interface "\tSolr API" as searchIndexIface
+        searchIndexIface -right- searchIndex
+
+        esgfSearchSrvc .down.> searchIndexIface
+        esgfSearchSrvc -[hidden]- searchIndexIface
+    }
+    interface "\tESG Search" as esgfSearchSrvcIface
+    esgfSearchSrvcIface -down- esgfSearchSrvc
+
+    ' Placement setting to ensure interface is displayed directly below
+    esgfSearchSrvc -[hidden]- esgfSearchSrvcIface
+
+    ' CEDA Archive interfaces
+    interface "Data Access / WPS" as dataAccessIface
+    interface "\t\tOIDC" as localIdPIface
+    localIdPIface -- localIdP
+
+    esgfCentralIdP .down.> localIdPIface
+
+    ' Align placement
+    esgfCentralIdP -[hidden]- localIdPIface
+
+    ' Storage interfaces
+    interface "\tS3" as s3Iface
+    interface "\t\tPOSIX" as posixIface
+
+    note left of storage : Dual POSIX +\nS3 Access to same\ndata\n(future extension)
+    posixIface -down- storage
+    s3Iface -down- storage
+
+    ' Alignment
+    posixIface -[hidden]- storage
+    
+    ' Services using POSIX storage interface
+    dataAccessServices .down.> posixIface
+
+    dataAccessIface -down- dataAccessServices
+
+    ' Alignment
+    dataAccessIface -[hidden]- dataAccessServices
+
+    dataAccessServices -[hidden]- storage
+}
+
+card "Climate4Impact" as c4I {
+    component "C4I Web Portal" as c4iWebClnt
+    component "Notebooks" as jupyter 
+    'note left of jupyter : Self-managed /\nper project
+    database cacheStorage [
+
+        Data Storage Cache
+
+    ] 
+    interface "\tS3" as cacheS3Iface
+
+    note top of cacheS3Iface : Cache of data from\ndata node for\nlocal analysis
+    cacheS3Iface -down- cacheStorage
+    
+    ' Alignment
+    cacheS3Iface -[hidden]- cacheStorage
+
+    jupyter .down.> cacheS3Iface
+    jupyter -[hidden]- cacheS3Iface
+}
+
+' jupyter
+interface "\t\t\tNotebooks" as jupyterIface
+jupyterIface -down- jupyter
+
+' Positioning
+jupyterIface -[hidden]- jupyter
+
+jupyter .down.> s3Iface
+
+interface "\t\t\tWeb access" as c4iWebClntIface
+
+c4iWebClntIface -down- c4iWebClnt
+c4iWebClntIface -[hidden]- c4iWebClnt
+
+userAgent -[hidden]- esgfCentralisedSrvcs
+userAgent .down.> jupyterIface
+userAgent .down.> c4iWebClntIface
+userAgent .down.> esgfCentralIdpIface
+
+c4I -[hidden]- esgfCentralisedSrvcs
+c4iWebClnt -[hidden]- esgfCentralisedSrvcs
+c4iWebClnt -[hidden]- esgfDataProvider
+c4iWebClnt .down.> dataAccessIface
+c4iWebClnt -[hidden]- dataAccessIface
+c4iWebClnt .down.> s3Iface
+c4iWebClnt -[hidden]- s3Iface
+c4iWebClnt .down.> esgfSearchSrvcIface
+c4iWebClnt -[hidden]- esgfSearchSrvcIface
+c4iWebClnt .down.> esgfCentralIdpIface
+c4iWebClnt -[hidden]- esgfCentralIdpIface
+@enduml
