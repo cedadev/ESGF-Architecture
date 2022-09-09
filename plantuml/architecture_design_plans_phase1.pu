@@ -82,12 +82,9 @@ card "Data Provider" as esgfDataProvider {
     esgfCentralIdP -[hidden]- localIdPIface
 
     ' Storage interfaces
-    interface "\tS3" as s3Iface
     interface "\t\tPOSIX" as posixIface
 
-    note left of storage : Dual POSIX +\nS3 Access to same\ndata\n(future extension)
     posixIface -down- storage
-    s3Iface -down- storage
 
     ' Alignment
     posixIface -[hidden]- storage
@@ -131,8 +128,6 @@ jupyterIface -down- jupyter
 ' Positioning
 jupyterIface -[hidden]- jupyter
 
-jupyter .down.> s3Iface
-
 interface "\t\t\tWeb access" as c4iWebClntIface
 
 c4iWebClntIface -down- c4iWebClnt
@@ -148,8 +143,6 @@ c4iWebClnt -[hidden]- esgfCentralisedSrvcs
 c4iWebClnt -[hidden]- esgfDataProvider
 c4iWebClnt .down.> dataAccessIface
 c4iWebClnt -[hidden]- dataAccessIface
-c4iWebClnt .down.> s3Iface
-c4iWebClnt -[hidden]- s3Iface
 c4iWebClnt .down.> esgfSearchSrvcIface
 c4iWebClnt -[hidden]- esgfSearchSrvcIface
 c4iWebClnt .down.> esgfCentralIdpIface
