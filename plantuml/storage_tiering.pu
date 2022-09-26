@@ -1,0 +1,89 @@
+@startuml StorageTiering
+
+' Set a style similar to Enterprise Architect
+skinparam ranksep 50
+skinparam nodesep 50
+skinparam component {
+  BorderColor black
+  BackgroundColor wheat|Tan
+}
+skinparam interface {
+    BorderColor black
+}
+skinparam database {
+    BackgroundColor wheat|Tan
+}
+skinparam interface {
+    BorderColor black
+    BackgroundColor wheat
+}
+skinparam card {
+  BorderColor black
+  BackgroundColor wheat|Tan
+}
+skinparam ArrowColor black
+' This setting alone completely compacts and tidies the diagram!!
+skinparam linetype ortho
+
+database "\t3rd Party\n(Public Cloud or \n other external)\n   [Object Store]" as 3rdPartyDisk
+interface "\tS3" as 3rdPartyDiskInterface
+3rdPartyDisk -- 3rdPartyDiskInterface
+
+card "Storage Tiering" as storageTiering {
+    database "Analysis-ready data\n      [Object Store]" as analysisReadyCopy
+    interface "S3" as analysisReadyCopyInterface
+    analysisReadyCopy -left- analysisReadyCopyInterface
+
+    database "\t  Archive  \t\n" as archiveDisk
+    interface "\t\tPOSIX" as archivePOSIX
+    archiveDisk -left- archivePOSIX
+
+    component "\t  Tape  \t" as archiveTape
+    interface "Tape\ninterface\n" as archiveTapeInterface
+    archiveTape -left- archiveTapeInterface
+
+    analysisReadyCopy -[hidden]- archiveDisk
+    archiveDisk --[hidden]- archiveTape
+}
+
+card "Storage Management Web Processing Services" as storageManagement {
+
+    frame "Processes" as processes {
+        component "Create ARD" as createArdProc
+        interface "\tAPI" as createArdProcInterface
+        createArdProc -left- createArdProcInterface
+
+        'wps -[hidden]- createArdProc
+        createArdProc --( archivePOSIX
+        createArdProc --( analysisReadyCopyInterface
+        createArdProc --( 3rdPartyDiskInterface
+
+        component "Migrate to Disk" as migrate2DiskProc
+        interface "\tAPI" as migrate2DiskProcInterface
+        migrate2DiskProc -left- migrate2DiskProcInterface
+
+        createArdProc --[hidden]-- migrate2DiskProc
+    }
+    component "WPS" as wps
+    interface "WS API" as wpsAPI
+    'interface as "wpsReqInterface"
+
+    wps -up- wpsAPI
+
+    wps -right-( createArdProcInterface
+    wps -right-( migrate2DiskProcInterface
+
+    migrate2DiskProc --( archivePOSIX
+    'migrate2DiskProc ..> archivePOSIX
+    migrate2DiskProc -left-( archiveTapeInterface
+
+    createArdProc -[hidden]- migrate2DiskProc
+}
+
+component "Client Application" as clientApp
+clientApp --( wpsAPI
+'clientApp -[hidden]- storageManagement
+'3rdPartyDisk -[hidden]- storageTiering
+'storageTiering -[hidden]- storageManagement
+
+@enduml
