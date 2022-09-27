@@ -1,0 +1,68 @@
+@startuml
+skinparam ranksep 50
+skinparam nodesep 50
+skinparam component {
+  BorderColor black
+  BackgroundColor wheat|Tan
+}
+skinparam interface {
+    BorderColor black
+}
+skinparam database {
+    BackgroundColor wheat|Tan
+}
+skinparam interface {
+    BorderColor black
+    BackgroundColor wheat
+}
+skinparam card {
+  BorderColor black
+  BackgroundColor wheat|Tan
+}
+skinparam ArrowColor black
+skinparam ArrowLollipopColor wheat
+' This setting alone completely compacts and tidies the diagram!!
+'skinparam linetype ortho
+
+component "Search Client" as searchClient
+component "Load Balancer" as loadBalancer
+interface "DNS look-up" as loadBalancerInterface
+loadBalancerInterface -right- loadBalancer
+
+card "Search Service\n(European Deployment)" {
+    component searchServiceEur [
+        Search Service
+    ]
+    interface "STAC API" as searchServiceEurInterface
+    searchServiceEurInterface -- searchServiceEur
+
+    database "Search Index" as searchIndexEur
+    searchServiceEur -(0- searchIndexEur
+}
+
+card "Search Service\n(US Deployment)" {
+    component searchServiceUS [
+        Search Service
+    ]
+    interface "\tSTAC API" as searchServiceUsInterface
+    searchServiceUsInterface -- searchServiceUS
+
+    database "Search Index" as searchIndexUS
+    searchServiceUS -(0- searchIndexUS
+}
+note "DNS-based load balancing to present US and\nEuropean search replicas through single endpoint" as loadBalancingNote
+loadBalancingNote .- loadBalancerInterface
+
+note "Each Service presents an API. \nSearch Services replicate\ncontent from one another\nto ensure consistency" as replicationNote
+replicationNote .- searchServiceEurInterface
+
+searchClient --[hidden]-- searchServiceEur
+searchClient --[hidden]-- searchServiceUS
+
+searchClient -right-( loadBalancerInterface
+searchClient --( searchServiceEurInterface
+searchClient --( searchServiceUsInterface
+
+searchServiceEur --( searchServiceUsInterface
+searchServiceUS --( searchServiceEurInterface
+@enduml
