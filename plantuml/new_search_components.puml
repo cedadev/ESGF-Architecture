@@ -1,0 +1,60 @@
+@startuml new_search_components
+
+package Current {
+    actor user1 as "User" #LightSteelBlue
+    component rest1 as "ESGF REST API" #LightSteelBlue
+    component portal1 as "ESGF Portal" #LightSteelBlue
+    component client1 as "esgf-pyclient" #LightSteelBlue
+    component search1 as "ESGF Search" #LightSteelBlue
+
+    package Solr {
+        database solr1 as "SOLR DB" #LightSteelBlue
+        database solr2 as "SOLR DB" #LightSteelBlue
+        database solr3 as "SOLR DB" #LightSteelBlue
+    }
+
+    user1-->portal1
+    user1-->client1
+    portal1-->rest1
+    client1-->rest1
+    rest1-->search1
+    search1-->Solr
+}
+
+package Proposed {
+    actor user2 as "User" #SpringGreen
+    ' component rest2 as "ESGF REST API" #SpringGreen
+    component portal2 as "ESGF Portal" #SpringGreen
+    component client2 as "esgf-pyclient" #SpringGreen
+
+    component search2 as "ESGF / CEDA STAC Search" #SpringGreen
+    component meta2 as "ESGF metagrid" #SpringGreen
+
+    component kerchunk2 as "Kerchunk or CFA files" #SpringGreen
+
+    interface harvest2 as "Harvest" #SpringGreen
+
+    database stac2 as "STAC Catalogue" #SpringGreen
+
+    user2-->portal2
+    user2-->client2
+    user2-->meta2
+
+    ' old route via RESTapi
+    'portal2-->rest2
+    'client2-->rest2
+    'meta2-->rest2
+    'rest2-->search2
+
+    ' new route via STAC API
+    portal2-->search2
+    client2-->search2
+    meta2-->search2
+
+    search2-->stac2
+    stac2->kerchunk2
+    search2<--kerchunk2
+    harvest2<-stac2
+}
+
+@enduml
