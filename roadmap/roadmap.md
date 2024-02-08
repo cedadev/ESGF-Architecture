@@ -57,6 +57,13 @@ Determine mandatory principles for working.
 ### *Vision*
 The latest version of the software can be easily installed by any ESGF partner.
 
+### Tasks
+
+- Support for podman version of the installation.
+- Rocky9 image support.
+- Resolve issues with the CMCC stats service.
+- S3 file system support.
+
 ## E3 - Bulk transfer
 
 ### *Vision*
