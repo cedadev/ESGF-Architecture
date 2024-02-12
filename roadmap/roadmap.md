@@ -106,6 +106,9 @@ Data can be ingested into ESGF and made available for search.
   - **T4.7.2** Update data
   - **T4.7.3** Revoke data
   - **T4.7.4** Publish new version
+- **T4.8** Ensure data quality (QC)
+
+### *Acceptance criteria*
 
 ## E5 - Search
  
