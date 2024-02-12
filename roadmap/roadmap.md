@@ -141,4 +141,9 @@ A user can interact with the data they searched for, to transform it into new da
 
 ### *Tasks*
 
+- **T7.1** User can find the data on JASMIN
+- **T7.2** User can analyse the data in a Jupyter Notebook on JASMIN
+- **T7.3** User can analyse the data on an interactive analysis node on JASMIN
+- **T7.4** User can analyse the data on batch compute (LOTUS) on JASMIN
+
 ### *Acceptance criteria*
