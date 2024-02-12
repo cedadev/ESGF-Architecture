@@ -57,27 +57,44 @@ Determine mandatory principles for working.
 ### *Vision*
 The latest version of the software can be easily installed by any ESGF partner.
 
+### *Tasks*
+
+
 ## E3 - Bulk transfer
 
 ### *Vision*
 Data can be transferred between ESGF nodes with excellent performance.
+
+### *Tasks*
+* T3.1 Install Globus at all European nodes.
 
 ## E4 - Publish
 
 ### *Vision*
 Data can be ingested into ESGF and made available for search.
 
+### *Tasks*
+
+
 ## E5 - Search
  
 ### *Vision* 
 A user can search the ESGF catalogue and get the correct result in a timely manner.
+
+### *Tasks*
+
 
 ## E6 - Download
 
 ### *Vision*
 A user can download the data they searched for, in a timely manner.
 
+### *Tasks*
+
+
 ## E7 - User interaction
 
 ### *Vision*
 A user can interact with the data they searched for, to transform it into new data.
+
+### *Tasks*
