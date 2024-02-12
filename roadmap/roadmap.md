@@ -32,7 +32,7 @@ this *Epic*?".
 We have identified different areas that we believe are important to deliver ESGF, and 
 could be the target for each *Epic*.
 
-* Governance
+* Techincal Governance
 * Installation
 * Bulk transfer
 * Publish
@@ -44,13 +44,19 @@ we can break these down further, identify the output (*Vision*), decide on the *
 for each *Sprint* and generate task lists (*Backlog*) for each *Sprint* which, when
 accumulated, will produce the *Vision* for the *Epic*.
 
-## E1 - Governance
+## E1 - Technical Governance
 
 ### *Vision*
+
 Determine mandatory principles for working.
 
 ### *Tasks*
+- **T1.1** Write or adapt the LICENSE that all software will be developed under
+- **T1.2** Setup, adapt or collate the software repositories
+- **T1.3** Write the versioning, tagging and release specification that all software will be committed and released under
+- **T1.4** Assign repository managers and write specifications for code-review and acceptance
 
+### *Acceptance criteria*
 
 ## E2 - Installation
 
@@ -59,16 +65,18 @@ The latest version of the software can be easily installed by any ESGF partner.
 
 ### *Tasks*
 
-- Support for podman version of the installation.
+- **T2.1** Update support for podman version of the installation.
   - GFDL have reported that the podman installation works, but there are some issues around container networks and file permissions still to resolve. We'll also need to merge their changes into the main repo.
-- Add Rocky 9 as the base for the next version of the images.
+- **T2.2** Add Rocky 9 as the base for the next version of the images.
   - Will require us to resolve the issue in the gitlab.com pipeline caused by a communication failure with the Rocky RPM server.
-- Resolve issues with the CMCC stats service:
+- **T2.3** Resolve issues with the CMCC stats service:
   - Debugging CEDA's communication problems with the stats server.
   - Solving the problem where a failure to communicate with the stats server causes the file-server containers to crash.
-- S3 file system support.
+- **T2.4** Add S3 file system support.
   - This has been done for Kubernetes but needs to be added for the Ansible version of the installation.
   - We will also want to add better support for including a certificate in the file-server container for verifying the S3 connection.
+
+### *Acceptance criteria*
 
 ## E3 - Bulk transfer
 
@@ -76,7 +84,9 @@ The latest version of the software can be easily installed by any ESGF partner.
 Data can be transferred between ESGF nodes with excellent performance.
 
 ### *Tasks*
-* T3.1 Install Globus at all European nodes.
+- **T3.1** Install Globus at all European nodes.
+
+### *Acceptance criteria*
 
 ## E4 - Publish
 
@@ -85,6 +95,17 @@ Data can be ingested into ESGF and made available for search.
 
 ### *Tasks*
 
+- **T4.1** Test current pipeline is compatible with expected CMIP7 data
+- **T4.2** Test and develop PID and DOI assignment
+- **T4.3** ES-DOC scanning and ingest
+- **T4.4** Errata service for updated data
+- **T4.5** Revoke data at a single site and over all sites
+- **T4.6** Publish a new version at a single site and over all sites
+- **T4.7** Adapt publishing pipeline to produce STAC catalogue records
+  - **T4.7.1** ES-DOC ingest
+  - **T4.7.2** Update data
+  - **T4.7.3** Revoke data
+  - **T4.7.4** Publish new version
 
 ## E5 - Search
  
@@ -93,6 +114,14 @@ A user can search the ESGF catalogue and get the correct result in a timely mann
 
 ### *Tasks*
 
+- **T5.1** Write an example of searching with `pystac-client` in a notebook.  Search a wide space in the catalogue.
+- **T5.2** Demonstrate searching with MetaGrid.  Show that results for CMIP6 match the current implementation.
+- **T5.3** Compatability with legacy search (*this is something we might not want to do*)
+  - **T5.3.1** Write an example of searching with `esgf-client`
+  - **T5.3.2** Demonstrate searching in CoG
+- **T5.4** Demonstrate consistency of search between STAC implementation and Globus implementation.
+
+### *Acceptance criteria*
 
 ## E6 - Download
 
@@ -101,6 +130,9 @@ A user can download the data they searched for, in a timely manner.
 
 ### *Tasks*
 
+- **T6.1**
+
+### *Acceptance criteria*
 
 ## E7 - User interaction
 
@@ -108,3 +140,5 @@ A user can download the data they searched for, in a timely manner.
 A user can interact with the data they searched for, to transform it into new data.
 
 ### *Tasks*
+
+### *Acceptance criteria*
