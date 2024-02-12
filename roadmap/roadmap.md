@@ -59,6 +59,16 @@ The latest version of the software can be easily installed by any ESGF partner.
 
 ### *Tasks*
 
+- Support for podman version of the installation.
+  - GFDL have reported that the podman installation works, but there are some issues around container networks and file permissions still to resolve. We'll also need to merge their changes into the main repo.
+- Add Rocky 9 as the base for the next version of the images.
+  - Will require us to resolve the issue in the gitlab.com pipeline caused by a communication failure with the Rocky RPM server.
+- Resolve issues with the CMCC stats service:
+  - Debugging CEDA's communication problems with the stats server.
+  - Solving the problem where a failure to communicate with the stats server causes the file-server containers to crash.
+- S3 file system support.
+  - This has been done for Kubernetes but needs to be added for the Ansible version of the installation.
+  - We will also want to add better support for including a certificate in the file-server container for verifying the S3 connection.
 
 ## E3 - Bulk transfer
 
