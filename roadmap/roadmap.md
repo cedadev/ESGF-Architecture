@@ -85,6 +85,7 @@ Data can be transferred between ESGF nodes with excellent performance.
 
 ### *Tasks*
 - **T3.1** Install Globus at all European nodes.
+- **T3.2** Given a file list, ensure data is automatically synchronized across Tier 1 sites using Globus where available
 
 ### *Acceptance criteria*
 
@@ -108,6 +109,11 @@ Data can be ingested into ESGF and made available for search.
   - **T4.7.4** Publish new version
 - **T4.8** Ensure data quality (QC)
 - **T4.9** Replicas - how to manage in search index
+- **T4.10** Support CMIP7 publication steps via Flow
+- **T4.11** Support E3SM publication via Flow
+- **T4.12** Improve error reporting and handling for publication via Flow to provide users visibility
+- **T4.13** Improve error reporting and troubleshooting info for publication via Flow to provide administrator tools
+- **T4.14** Create finer-grained authorization layer for permissions for publication
 
 ### *Acceptance criteria*
 
@@ -124,6 +130,8 @@ A user can search the ESGF catalogue and get the correct result in a timely mann
   - **T5.3.1** Write an example of searching with `esgf-client`
   - **T5.3.2** Demonstrate searching in CoG
 - **T5.4** Demonstrate consistency of search between STAC implementation and Globus implementation.
+- **T5.5** Migrate from solr infrastructure to Globus Search
+- **T5.6** Change the ESGF metadata structure to accommodate all three DoE sites in one index
 
 KNMI Climate4impact
 
@@ -136,7 +144,9 @@ A user can download the data they searched for, in a timely manner.
 
 ### *Tasks*
 
-- **T6.1**
+- **T6.1** Globus transfer available at dataset level
+- **T6.2** Globus transfers can go to any type of collection
+- **T6.3** Shopping cart transfers can go to any type of collection
 
 ### *Acceptance criteria*
 
@@ -153,5 +163,7 @@ Notebook can be run anywhere as it uses cloud storage
 - **T7.2** User can analyse the data in a Jupyter Notebook on JASMIN
 - **T7.3** User can analyse the data on an interactive analysis node on JASMIN
 - **T7.4** User can analyse the data on batch compute (LOTUS) on JASMIN
+- **T7.5** Support EGI-checkin and Globus Authentication
+- **T7.6** Identify demonstrable scenario that is useful to climate scientists
 
 ### *Acceptance criteria*
