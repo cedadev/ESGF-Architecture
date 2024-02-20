@@ -9,7 +9,7 @@
 We (CEDA) would like to approach the development and roll out of ESGF 2.0 for CMIP7 in
 an Agile way.  This will consist of:
 
-* Epics
+* Initiatives
 * Sprints
 * A focus on minimal viable products
 * A component working at the end of a sprint
@@ -20,17 +20,17 @@ We are inspired by the data challenges, but want to reformulate them into Agile
 methodology and only concentrate on what is relevant in 2024.  A translation between
 data challenges and Agile terms:
 
-* Data challenge == *Epic*
+* Data challenge == *Initiative*
 * Outcome of the data challenge == *Vision*
 * Task == *Sprint*
 * Steps in each task == *Features*, which 
 
 The development will be *Feature led*, and lead to a *minimal viable product*.  For each
-*Epic* we need to ask "what is the minimum we have to achieve to realise the *Vision* for
-this *Epic*?".
+*Initiative* we need to ask "what is the minimum we have to achieve to realise the *Vision* for
+this *Initiative*?".
 
 We have identified different areas that we believe are important to deliver ESGF, and 
-could be the target for each *Epic*.
+could be the target for each *Initiative*.
 
 * Techincal Governance
 * Installation
@@ -42,7 +42,7 @@ could be the target for each *Epic*.
 
 we can break these down further, identify the output (*Vision*), decide on the *Features*
 for each *Sprint* and generate task lists (*Backlog*) for each *Sprint* which, when
-accumulated, will produce the *Vision* for the *Epic*.
+accumulated, will produce the *Vision* for the *Initiative*.
 
 ## E1 - Technical Governance
 
@@ -97,16 +97,17 @@ Data can be ingested into ESGF and made available for search.
 
 - **T4.1** Test current pipeline is compatible with expected CMIP7 data
 - **T4.2** Test and develop PID and DOI assignment
-- **T4.3** ES-DOC scanning and ingest
+- **T4.3** ES-DOC scanning and ingest (just need a link)
 - **T4.4** Errata service for updated data
 - **T4.5** Revoke data at a single site and over all sites
 - **T4.6** Publish a new version at a single site and over all sites
 - **T4.7** Adapt publishing pipeline to produce STAC catalogue records
-  - **T4.7.1** ES-DOC ingest
+  - **T4.7.1** ES-DOC ingest (later - already a link in STAC record)
   - **T4.7.2** Update data
   - **T4.7.3** Revoke data
   - **T4.7.4** Publish new version
 - **T4.8** Ensure data quality (QC)
+- **T4.9** Replicas - how to manage in search index
 
 ### *Acceptance criteria*
 
@@ -123,6 +124,8 @@ A user can search the ESGF catalogue and get the correct result in a timely mann
   - **T5.3.1** Write an example of searching with `esgf-client`
   - **T5.3.2** Demonstrate searching in CoG
 - **T5.4** Demonstrate consistency of search between STAC implementation and Globus implementation.
+
+KNMI Climate4impact
 
 ### *Acceptance criteria*
 
@@ -143,6 +146,8 @@ A user can download the data they searched for, in a timely manner.
 A user can interact with the data they searched for, to transform it into new data.
 
 ### *Tasks*
+
+Notebook can be run anywhere as it uses cloud storage
 
 - **T7.1** User can find the data on JASMIN
 - **T7.2** User can analyse the data in a Jupyter Notebook on JASMIN
