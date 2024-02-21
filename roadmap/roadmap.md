@@ -62,10 +62,25 @@ The latest version of the software can be easily installed by any ESGF partner.
 ### *Vision*
 Data can be transferred between ESGF nodes with excellent performance.
 
+### *Tasks*
+
+ - Tier-1 sites deploy GCSv5 endpoints
+ - Identify test set of CMIP data
+ - Transfer test benchmarking
+
 ## E4 - Publish
 
 ### *Vision*
 Data can be ingested into ESGF and made available for search.
+
+### *Tasks*
+
+ - `esg-publisher` needs test suite
+ - Push records to Globus Search
+ - Push records to Elastic Search
+ - Implement workflows
+ - Add QC checks to workflows
+ - Open question for ElasticSearch ingest:  how is access control implemented?
 
 ## E5 - Search
  
@@ -76,6 +91,14 @@ A user can search the ESGF catalogue and get the correct result in a timely mann
 
 ### *Vision*
 A user can download the data they searched for, in a timely manner.
+
+### *Tasks*
+
+ - Upgrade wget API to support Globus Search backend
+ - Upgrade wget API to support Elasic Search backend (or STAC) ?
+ - Enhance `esgpull` to support Globus Transfer
+ - integrate `esgpull` with Metagrid
+ - Retire wget?
 
 ## E7 - User interaction
 
