@@ -86,6 +86,9 @@ Data can be transferred between ESGF nodes with excellent performance.
 ### *Tasks*
 - **T3.1** Install Globus at all European nodes.
 - **T3.2** Given a file list, ensure data is automatically synchronized across Tier 1 sites using Globus where available
+- **T3.3** Tier-1 sites deploy GCSv5 endpoints
+- **T3.4** Identify test set of CMIP data
+- **T3.5** Transfer test benchmarking
 
 ### *Acceptance criteria*
 
@@ -114,6 +117,12 @@ Data can be ingested into ESGF and made available for search.
 - **T4.12** Improve error reporting and handling for publication via Flow to provide users visibility
 - **T4.13** Improve error reporting and troubleshooting info for publication via Flow to provide administrator tools
 - **T4.14** Create finer-grained authorization layer for permissions for publication
+- **T4.15** `esg-publisher` needs test suite
+- **T4.16** Push records to Globus Search
+- **T4.17** Push records to Elastic Search
+- **T4.18** Implement workflows
+- **T4.19** Add QC checks to workflows
+- **T4.20** Open question for ElasticSearch ingest:  how is access control implemented?
 
 ### *Acceptance criteria*
 
@@ -133,8 +142,6 @@ A user can search the ESGF catalogue and get the correct result in a timely mann
 - **T5.5** Migrate from solr infrastructure to Globus Search
 - **T5.6** Change the ESGF metadata structure to accommodate all three DoE sites in one index
 
-KNMI Climate4impact
-
 ### *Acceptance criteria*
 
 ## E6 - Download
@@ -147,6 +154,11 @@ A user can download the data they searched for, in a timely manner.
 - **T6.1** Globus transfer available at dataset level
 - **T6.2** Globus transfers can go to any type of collection
 - **T6.3** Shopping cart transfers can go to any type of collection
+- **T6.4** Upgrade wget API to support Globus Search backend
+- **T6.5** Upgrade wget API to support Elasic Search backend (or STAC) ?
+- **T6.6** Enhance `esgpull` to support Globus Transfer
+- **T6.7** integrate `esgpull` with Metagrid
+- **T6.8** Retire wget?
 
 ### *Acceptance criteria*
 
